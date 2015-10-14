@@ -15,30 +15,24 @@ import com.zhgl.util.dao.DAOSupport;
 public class EventWorkCycleServiceBean extends DAOSupport<EventWorkCycle>
 		implements EventWorkCycleService {
 
-	/**
-	 * 根据塔机状态id查询此塔机所有的工作循环数据的数量
-	 */
 	@Override
-	public int countEventById(String id) {
+	public int countEventById(int sid) {
 		Query query = em
 				.createQuery(
-						"select count(o.id) from  EventWorkCycle o where o.visible=?1 and o.towerCraneStatus.id=?2")
-				.setParameter(1, true).setParameter(2, id);
+						"select count(o.id) from  EventWorkCycle o where o.visible=?1 and o.socketImei.sid=?2")
+				.setParameter(1, true).setParameter(2, sid);
 		if (query.getSingleResult() == null) {
 			return 0;
 		}
 		return Integer.parseInt(query.getSingleResult() + "");
 	}
 
-	/**
-	 * 根据塔机状态id查询此塔机所有的工作循环数据的总吊重
-	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public double countWeightEvent(String id) {
+	public double countWeightEvent(int id) {
 		Query query = em
 				.createQuery(
-						"select o.largestWeight from  EventWorkCycle o where o.visible=?1 and o.towerCraneStatus.id=?2")
+						"select o.largestWeight from  EventWorkCycle o where o.visible=?1 and o.socketImei.sid=?2")
 				.setParameter(1, true).setParameter(2, id);
 		double weight = 0;
 		List<Double> list = query.getResultList();
@@ -53,11 +47,11 @@ public class EventWorkCycleServiceBean extends DAOSupport<EventWorkCycle>
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public int countTimeEvent(String id) {
+	public int countTimeEvent(int sid) {
 		Query query = em
 				.createQuery(
-						"select o from  EventWorkCycle o where o.visible=?1 and o.towerCraneStatus.id=?2")
-				.setParameter(1, true).setParameter(2, id);
+						"select o from  EventWorkCycle o where o.visible=?1 and o.socketImei.sid=?2")
+				.setParameter(1, true).setParameter(2, sid);
 		List<EventWorkCycle> list = query.getResultList();
 		int time = 0;
 		for (EventWorkCycle workCycle : list) {
@@ -73,11 +67,11 @@ public class EventWorkCycleServiceBean extends DAOSupport<EventWorkCycle>
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public double countWeight(Date beginDate, Date endDate, String id) {
+	public double countWeight(Date beginDate, Date endDate, int sid) {
 		Query query = em
-				.createNativeQuery(
-						"select o.largestWeight from  t_eventWorkCycle o where o.visible=?1 and o.tcstatus_id=?2 and o.startTime<?3 and o.startTime>=?4")
-				.setParameter(1, true).setParameter(2, id)
+				.createQuery(
+						"select o.largestWeight from EventWorkCycle o where o.visible=?1 and o.socketImei.sid=?2 and o.startTime<?3 and o.startTime>=?4")
+				.setParameter(1, true).setParameter(2, sid)
 				.setParameter(3, endDate).setParameter(4, beginDate);
 		List<Object> arr = query.getResultList();
 		double weight = 0;
@@ -91,11 +85,11 @@ public class EventWorkCycleServiceBean extends DAOSupport<EventWorkCycle>
 	 * 根据塔机状态id,与起始时间，查询此塔机在此起始时间范围内的所有的工作循环数据的条数
 	 */
 	@Override
-	public int countEvent(Date beginDate, Date endDate, String id) {
+	public int countEvent(Date beginDate, Date endDate, int sid) {
 		Query query = em
 				.createNativeQuery(
-						"select count(o.largestWeight) from  t_eventWorkCycle o where o.visible=?1 and o.tcstatus_id=?2 and o.startTime<?3 and o.startTime>=?4")
-				.setParameter(1, true).setParameter(2, id)
+						"select count(o.largestWeight) from  t_eventWorkCycle o where o.visible=?1 and o.socketImei.sid=?2 and o.startTime<?3 and o.startTime>=?4")
+				.setParameter(1, true).setParameter(2, sid)
 				.setParameter(3, endDate).setParameter(4, beginDate);
 
 		if (query.getSingleResult() == null) {
@@ -107,12 +101,12 @@ public class EventWorkCycleServiceBean extends DAOSupport<EventWorkCycle>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int countTime(Date beginDate, Date endDate, String id) {
+	public int countTime(Date beginDate, Date endDate, int sid) {
 		Query query = em
 				.createQuery(
 						"select o from EventWorkCycle o "
-								+ "where o.visible=?1 and o.towerCraneStatus.id=?2 and o.createTime<?3 and o.createTime>=?4")
-				.setParameter(1, true).setParameter(2, id)
+								+ "where o.visible=?1 and o.socketImei.sid=?2 and o.createTime<?3 and o.createTime>=?4")
+				.setParameter(1, true).setParameter(2, sid)
 				.setParameter(3, endDate).setParameter(4, beginDate);
 		if (query == null) {
 			return 0;

@@ -12,20 +12,17 @@
            		<input type="hidden" id="sid">
            		<input type="hidden" id="fuid">
            		<div class="container-fluid">
+           			  <div class="row">
+			            <div class="col-md-3"><h4>设备IMEI号</h4></div>
+			            <div class="col-md-9"><input type="text" id="imei" class="form-control" readonly="readonly" ></div>
+			          </div>
 			          <div class="row">
 			            <div class="col-md-3"><h4>俯视点名称</h4></div>
 			            <div class="col-md-9"><input type="text"   id="pname" class="typeahead pname"  autocomplete="off" ></div>
 			          </div>
 			          <div class="row">
-			            <div class="col-md-3"><h4>设备型号</h4></div>
-			            <div class="col-md-3">
-			            	<select name="mid" id="mid" class="form-control" >
-			            		<option value="0" >请选择</option>
-			            		<c:forEach items="${models}" var="entry">
-			            			<option value="${entry.id}" >${entry.model}(${entry.manufacturer})</option>
-			            		</c:forEach>
-			            	</select>
-			            </div>
+			           	<div class="col-md-3"><h4>现场编号</h4></div>
+			            <div class="col-md-3"><input type="text" id="scenenum" class="form-control"></div>
 			            <div class="col-md-3"><h4>是否启用激活</h4></div>
 			            <div class="col-md-3">
 			            	<select id="enable" name="enable" class="form-control" >
@@ -36,15 +33,35 @@
 			            </div>
 			          </div>
 			          <div class="row">
-			            <div class="col-md-3"><h4>经度</h4></div>
-			            <div class="col-md-3"><input type="text" id="longitude" class="form-control"></div>
-			            <div class="col-md-3"><h4>纬度</h4></div>
-			            <div class="col-md-3"><input type="text" id="latitude" class="form-control"></div>
+			            <div class="col-md-3"><h4>经纬度<a href="http://api.map.baidu.com/lbsapi/getpoint" target=window >拾取</a></h4></div>
+			            <div class="col-md-6"><input type="text" id="latlng" class="form-control"></div>
+			          </div>
+			          <div class="row">
+			          	<div class="col-md-3"><h4>设备型号</h4></div>
+			            <div class="col-md-6">
+			            	<select name="mid" id="mid" class="form-control" >
+			            		<option value="0" >请选择</option>
+			            		<c:forEach items="${models}" var="entry">
+			            			<option value="${entry.id}" >${entry.model}(${entry.manufacturer})</option>
+			            		</c:forEach>
+			            	</select>
+			            </div>
+			          </div>
+			          <div class="row hidden" >
+			            <div class="col-md-3"><h4>IMEI号ASCII码</h4></div>
+			            <div class="col-md-6"><input type="text" id="imeiASCII" class="form-control" readonly="readonly"  ></div>
 			          </div>
 			          <hr>
 			          <div class="row">
 			            <div class="col-md-3"><h4>使用备案编号</h4></div>
 			            <div class="col-md-9"><input type="text"   id="funum" class="typeahead funum"  autocomplete="off" ></div>
+			          </div>
+			          <div class="row">
+			            <div class="col-md-3"></div>
+			          	<div id="futext" class="col-md-9"></div>
+			          </div>
+			          <div class="row">
+			            <div id="tip" class="col-md-12"></div>
 			          </div>
 			    </div>
            </div><!-- modal-body -->

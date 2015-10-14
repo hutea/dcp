@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table(name = "t_socketimei")
@@ -50,16 +51,20 @@ public class SocketImei {
 
 	private Boolean visible = false;
 
+	// 运行辅助数据
+	@Transient
+	private Boolean online = false;
+	@Transient
+	private Double cycleTotalWeight;// 累计吊重
+	@Transient
+	private Long alarmCount;// 报警次数
+	@Transient
+	private Long violationCount;// 违章次数
+	@Transient
+	private String curretnAlarm; // 实时报警
+
 	public int getSid() {
 		return sid;
-	}
-
-	public Date getActiveDate() {
-		return activeDate;
-	}
-
-	public void setActiveDate(Date activeDate) {
-		this.activeDate = activeDate;
 	}
 
 	public void setSid(int sid) {
@@ -74,14 +79,6 @@ public class SocketImei {
 		this.imei = imei;
 	}
 
-	public Date getJoinDate() {
-		return joinDate;
-	}
-
-	public void setJoinDate(Date joinDate) {
-		this.joinDate = joinDate;
-	}
-
 	public Boolean getEnable() {
 		return enable;
 	}
@@ -90,28 +87,28 @@ public class SocketImei {
 		this.enable = enable;
 	}
 
+	public Date getJoinDate() {
+		return joinDate;
+	}
+
+	public void setJoinDate(Date joinDate) {
+		this.joinDate = joinDate;
+	}
+
+	public Date getActiveDate() {
+		return activeDate;
+	}
+
+	public void setActiveDate(Date activeDate) {
+		this.activeDate = activeDate;
+	}
+
 	public TowerCraneStatus getTowerCraneStatus() {
 		return towerCraneStatus;
 	}
 
-	public DeviceModel getDeviceModel() {
-		return deviceModel;
-	}
-
-	public void setDeviceModel(DeviceModel deviceModel) {
-		this.deviceModel = deviceModel;
-	}
-
 	public void setTowerCraneStatus(TowerCraneStatus towerCraneStatus) {
 		this.towerCraneStatus = towerCraneStatus;
-	}
-
-	public Boolean getVisible() {
-		return visible;
-	}
-
-	public void setVisible(Boolean visible) {
-		this.visible = visible;
 	}
 
 	public TowerCraneDevice getTowerCraneDevice() {
@@ -128,6 +125,62 @@ public class SocketImei {
 
 	public void setPoint(Point point) {
 		this.point = point;
+	}
+
+	public DeviceModel getDeviceModel() {
+		return deviceModel;
+	}
+
+	public void setDeviceModel(DeviceModel deviceModel) {
+		this.deviceModel = deviceModel;
+	}
+
+	public Boolean getVisible() {
+		return visible;
+	}
+
+	public void setVisible(Boolean visible) {
+		this.visible = visible;
+	}
+
+	public Boolean getOnline() {
+		return online;
+	}
+
+	public void setOnline(Boolean online) {
+		this.online = online;
+	}
+
+	public Double getCycleTotalWeight() {
+		return cycleTotalWeight;
+	}
+
+	public void setCycleTotalWeight(Double cycleTotalWeight) {
+		this.cycleTotalWeight = cycleTotalWeight;
+	}
+
+	public Long getAlarmCount() {
+		return alarmCount;
+	}
+
+	public void setAlarmCount(Long alarmCount) {
+		this.alarmCount = alarmCount;
+	}
+
+	public Long getViolationCount() {
+		return violationCount;
+	}
+
+	public void setViolationCount(Long violationCount) {
+		this.violationCount = violationCount;
+	}
+
+	public String getCurretnAlarm() {
+		return curretnAlarm;
+	}
+
+	public void setCurretnAlarm(String curretnAlarm) {
+		this.curretnAlarm = curretnAlarm;
 	}
 
 }

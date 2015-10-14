@@ -6,15 +6,37 @@
 提交数据：【使用备案】主键ID
 返回数据：参使用通过备案证
 3.通过【使用备案】主键ID获取【安装备案】相关数据：
-4.通过【使用备案】主键ID获取【拆卸备案】相关数据：
+####4.通过【使用备案】主键ID获取【拆卸备案】相关数据：
+
 
 5.工程项目地址归档
-提交数据：【使用备案】主键ID，市平台归档工程ID,市平台归档工程名称
+提交数据：【使用备案】主键ID，市平台归档工程ID,市平台归档工程名称,工程地址，
+服务器端口，当前业务数据主键ID
 返回数据：成功返回true，如未成功应进行此数据的间断性重新提交(借鉴支付宝回调思想)
 
 
-
-
-
 二、市平台提供给省平台
-1.
+1.获取工程下的所有运行设备
+
+
+
+---------------------------------
+
+http://118.122.250.29:8010/dy/EquipSys/tools/towerMonitoring.aspx
+
+1.通过使用登记编号获取【使用备案】相关数据：
+
+action=getUseDataList&userecordnumber={使用编号后5位}
+
+2.通过【使用备案】主键ID获取【使用备案】相关数据：
+
+action=getUseData&fid={使用业务主键}
+
+3.通过【使用备案】主键ID获取【安装备案】相关数据：
+
+action=getInstallList&fid={使用业务主键}
+
+
+
+http://118.122.250.29:8010/dy/EquipSys/tools/towerMonitoring.aspx?action=getUseDataList&userecordnumber=12
+http://118.122.250.29:8010/dy/EquipSys/tools/towerMonitoring.aspx?action=getUseData&fid=54608

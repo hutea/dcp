@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+	version="2.0">
+
+	<description>helper Tag for page</description>
+	<display-name>helper Tag</display-name>
+	<tlib-version>1.0</tlib-version>
+	<short-name>hfn</short-name>
+	<uri>/WEB-INF/classes/META-INF/helperFunction.tld</uri>
+
+	<function>
+		<name>yearLength</name>
+		<function-class>com.zhgl.util.sfl.HelperFunction</function-class>
+		<function-signature>java.lang.int yearCalc(java.util.Date)</function-signature>
+	</function>
+
+	<function>
+		<name>dateFormat</name>
+		<function-class>com.zhgl.util.sfl.HelperFunction</function-class>
+		<function-signature>java.lang.String
+			dateFormat(java.util.Date,java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>ascII</name>
+		<function-class>com.zhgl.util.sfl.HelperFunction</function-class>
+		<function-signature>java.lang.String ascII(java.lang.String)</function-signature>
+	</function>
+
+	<function>
+		<name>toFenzhong</name>
+		<function-class>com.zhgl.util.sfl.HelperFunction</function-class>
+		<function-signature>java.lang.String toFenzhong(int,java.lang.String)</function-signature>
+	</function>
+</taglib>

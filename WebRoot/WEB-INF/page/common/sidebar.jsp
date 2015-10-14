@@ -8,12 +8,12 @@
 		
 		<!-- SIDEBAR MENU -->
 		<ul>
-			<li>
+			<li >
 				<a href="index.html">
 					<i class="fa fa-tachometer fa-fw"></i> <span class="menu-text">Dashboard</span>
 				</a>					
 			</li>
-			<li><a class="" href="inbox.html"><i class="fa fa-desktop fa-fw"></i> <span class="menu-text">运行监控</span></a></li>
+			<li class='has-sub ${(m>10&&m<20)?"active":"" }'><a class="" href="${pageContext.request.contextPath}/manage/run/point/list"><i class="fa fa-desktop fa-fw"></i> <span class="menu-text">运行监控</span></a></li>
 			<li class="has-sub">
 				<a href="javascript:;" class="">
 				<i class="fa fa-table fa-fw"></i> <span class="menu-text">分析统计</span>
@@ -57,7 +57,6 @@
 					<li  class='${m==61?"current":"" }'><a class="" href="${pageContext.request.contextPath}/manage/point/list"><span class="sub-menu-text">俯视点管理</span></a></li>
 					<li><a class="" href="email_templates.html"><span class="sub-menu-text">帐户管理</span></a></li>
 					<li><a class="" href="email_templates.html"><span class="sub-menu-text">参数设置</span></a></li>
-					
 				</ul>
 			</li>
 		</ul>

@@ -58,7 +58,7 @@ public class HelperFunction {
 	 * 
 	 * @param second
 	 * @param pattern
-	 *            =“.”返回小数形式的分钟数；另支持“分-秒”方式
+	 *            ：=“.”返回小数形式的分钟数；另支持“分-秒”方式
 	 * @return
 	 */
 	public static String toFenzhong(int second, String pattern) {
@@ -88,13 +88,20 @@ public class HelperFunction {
 		}
 	}
 
+	public static void main(String[] args) {
+		double i = 100 / (double) 60;
+		DecimalFormat df = new DecimalFormat("#.00");
+		System.out.println(df.format(i));
+		System.out.println(i);
+	}
+
 	/**
 	 * 对日期进行格式化
 	 * 
 	 * @param date
-	 *            日期对象
+	 *            ：日期对象
 	 * @param pattern
-	 *            格式化样式
+	 *            ：格式化样式
 	 * @return
 	 */
 	public static String dateFormat(Date date, String pattern) {

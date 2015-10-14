@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.omg.CORBA.UserException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,14 +18,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.zhgl.api.parse.JsonUtil;
+import com.zhgl.api.parse.json.UseData;
+import com.zhgl.api.parse.json.UseRecord;
 import com.zhgl.core.ebean.DeviceModel;
 import com.zhgl.core.ebean.Point;
 import com.zhgl.core.ebean.SocketImei;
 import com.zhgl.core.ebean.TowerCrane;
+import com.zhgl.core.ebean.TowerCraneDevice;
 import com.zhgl.core.ebean.TowerCraneStatus;
 import com.zhgl.core.service.DeviceModelService;
 import com.zhgl.core.service.PointService;
 import com.zhgl.core.service.SocketImeiService;
+import com.zhgl.run.server.SocketUtil;
 import com.zhgl.util.dao.PageView;
 
 @RequestMapping("/manage/device")
@@ -66,10 +72,30 @@ public class SocketImeiAction {
 		return mav;
 	}
 
+	/**
+	 * 保存或修改设备注册相关数据
+	 * 
+	 * @param sid
+	 *            通讯ID
+	 * @param mid
+	 *            设备型号ID
+	 * @param pid
+	 *            俯视点ID
+	 * @param enable
+	 *            是否启用
+	 * @param fuid
+	 *            省平台使用ID
+	 * @param lnglat
+	 *            经纬度
+	 * @param scenenum
+	 *            现场编号
+	 * @return
+	 */
 	@RequestMapping(value = "/save/data")
 	public @ResponseBody
 	String saveData(int sid, long mid, long pid, int enable,
-			@RequestParam(required = false) String fuid) {
+			@RequestParam(required = false) String fuid, String lnglat,
+			String scenenum) {
 		try {
 			SocketImei entity = socketImeiService.find(sid);
 			entity.setPoint(pointService.find(pid));
@@ -79,6 +105,12 @@ public class SocketImeiAction {
 			}
 			if (entity.getActiveDate() == null) {
 				entity.setActiveDate(new Date());
+			}
+			
+			//同步省平台相关数据
+			System.out.println(fuid);
+			if (fuid != null && !"".equals(fuid)) {
+				
 			}
 			socketImeiService.update(entity);
 			return "success";
@@ -108,7 +140,11 @@ public class SocketImeiAction {
 			} else {
 				dataMap.put("mid", 0);
 			}
-			dataMap.put("enabel", si.getEnable() ? 1 : 2);
+			if (si.getActiveDate() != null) {
+				dataMap.put("enable", si.getEnable() ? 1 : 2);
+			} else {
+				dataMap.put("enable", 0);
+			}
 			Point point = si.getPoint();
 			if (point != null) {
 				dataMap.put("pid", point.getId());
@@ -117,6 +153,15 @@ public class SocketImeiAction {
 				dataMap.put("pid", 0);
 				dataMap.put("pname", "");
 			}
+			TowerCraneDevice towerCraneDevice = si.getTowerCraneDevice();
+			if (towerCraneDevice != null) {
+				dataMap.put("lnglat", towerCraneDevice.getLongitude() + ","
+						+ towerCraneDevice.getLatitude());
+			} else {
+				dataMap.put("lnglat", "");
+			}
+			dataMap.put("imei", si.getImei());
+			dataMap.put("imeiASCII", SocketUtil.analyticASCII(si.getImei()));
 			String json = mapper.writeValueAsString(dataMap);
 			return json;
 		} catch (Exception e) {
@@ -127,27 +172,24 @@ public class SocketImeiAction {
 
 	@RequestMapping(value = "/usenumber/query/{keyword}")
 	public @ResponseBody
-	String pointQuery(@PathVariable String keyword) {
-		return pointQueryJson(keyword);
+	String useNumberQuery(@PathVariable String keyword) {
+		return useNumberQueryJson(keyword);
 	}
 
 	@RequestMapping(value = "/usenumber/query/ajax/{keyword}.json")
 	public @ResponseBody
-	String pointQueryJson(@PathVariable String keyword) {
+	String useNumberQueryJson(@PathVariable String keyword) {
 		try {
+			System.out.println(keyword);
 			ObjectMapper mapper = new ObjectMapper();
-			List<TowerCraneStatus> tcsList = new ArrayList<TowerCraneStatus>();
-			for (int i = 0; i < 3; i++) {
-				TowerCraneStatus tcs = new TowerCraneStatus();
-				tcs.setId(i + "_id");
-				tcs.setUseNumber("num-" + i);
-				tcsList.add(tcs);
-			}
+			UseData useData = JsonUtil.parseUseData(keyword, "");
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-			for (TowerCraneStatus point : tcsList) {
+			for (UseRecord useRecord : useData.getList()) {
 				Map<String, Object> dataMap = new HashMap<String, Object>();
-				dataMap.put("id", point.getId());
-				dataMap.put("label", point.getUseNumber());
+				dataMap.put("id", useRecord.getfID());
+				dataMap.put("label", useRecord.getfUseRecordNUmber());// 塔机使用备案号
+				dataMap.put("pnum", useRecord.getfRecordNUmber());// 塔机备案号
+				dataMap.put("project", useRecord.getfProjectName());// 塔机备案号
 				list.add(dataMap);
 			}
 			String json = mapper.writeValueAsString(list);

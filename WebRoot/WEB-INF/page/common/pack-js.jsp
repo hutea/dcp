@@ -16,10 +16,18 @@
 	src="${pageContext.request.contextPath}/resource/template/js/jQuery-slimScroll-1.3.0/jquery.slimscroll.min.js"></script>
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/resource/template/js/jQuery-slimScroll-1.3.0/slimScrollHorizontal.min.js"></script>
+<!-- BLOCK UI -->
+<script type="text/javascript"
+	src="${pageContext.request.contextPath}/resource/template/js/jQuery-BlockUI/jquery.blockUI.min.js"></script>
+
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/resource/template/js/jQuery-Cookie/jquery.cookie.min.js"></script>
-<script src="${pageContext.request.contextPath}/resource/template/js/script.js"></script>
+<script
+	src="${pageContext.request.contextPath}/resource/template/js/script.js"></script>
 <script src="${pageContext.request.contextPath}/resource/js/myform.js"></script>
+<script src="${pageContext.request.contextPath}/resource/layer/layer.js"></script>
+
+
 <script>
 	jQuery(document).ready(function() {
 		App.setPage("widgets_box"); //Set current page
