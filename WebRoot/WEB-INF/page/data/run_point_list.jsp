@@ -15,7 +15,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<%@ include file="/WEB-INF/page/common/pack-style.jsp" %>
-	
+	<style type="text/css">
+		.layui-layer-border{
+			border: none;
+		}
+	</style>
 </head>
 <body>
 	<!-- HEADER -->
@@ -45,7 +49,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 											<a href="index.html">Home</a>
 										</li>
 										<li>
-											<a href="#">运行监控</a>
+											<a href="javascript:void(0)">运行监控</a>
 										</li>
 										<li>俯视图</li>
 									</ul>
@@ -60,6 +64,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						<!-- /PAGE HEADER -->
 						
 						<!-- 内容区 -->
+						<input type="hidden" id="queryBeginDate" value="${startDate }">
+						<input type="hidden" id="queryEndDate" value="${endDate }">
 						<div class="row mycontent">
 							<form id="pageList" action="${pageContext.request.contextPath}/manage/run/point/list" method="post">
 				      			<input type="hidden" name="page" value="${page}">
@@ -79,7 +85,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 									<div class="box-title">
 										<h4><i class="fa fa-flag"></i>${entry.name }</h4>
 										<div class="tools">
-											<a href="javascript:loadDevice('${entry.id}');" title="俯视图">
+											<a href="javascript:loadOverlook('${entry.id}');" title="俯视图">
 												<i class="fa fa-eye" ></i>
 											</a>
 											<a href="javascript:loadDevice('${entry.id}');" >
@@ -124,54 +130,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!-- JAVASCRIPTS -->
 	<%@ include file="/WEB-INF/page/common/pack-js.jsp" %>
 	<!-- /JAVASCRIPTS -->
-	
-	<script type="text/javascript">
-		$(function() {
-			var ids = $(".box-body");
-			for(var i=0;i<ids.length;i++){
-				var pid = ids[i].id.split("_")[1];
-				console.log(pid);
-				loadDevice(pid);
-			}
-			
-		});
-		
-		function loadDevice(pid){
-			$("#box_"+pid).block({
-                message: '<img src="resource/template/img/loaders/12.gif" align="absmiddle">',
-                css: {
-                    border: 'none',
-                    padding: '2px',
-                    backgroundColor: 'none'
-                },
-                overlayCSS: {
-                    backgroundColor: '#000',
-                    opacity: 0.05,
-                    cursor: 'wait'
-                }
-            });
-			
-			$.post("manage/run/point/device", {
-				pid : pid,
-			}, function(data) {
-				setTimeout(function() {$("#box_"+pid).unblock();}, 200); 
-				$("#data_"+pid).html(data);
-			});
-		}
-		
-		//运行图
-		function loadRun(sid){
-		 layer.open({
-	            type: 2,
-	            title: '塔机实时运行图',
-	            shadeClose: true,
-	            shade: false,
-	            scrollbar: false, //屏蔽浏览器滚动条
-	            maxmin: true, //开启最大化最小化按钮
-	            //area: ['800px', '500px'],
-	            content: 'http://localhost:8080/dcp/manage/point/list?sid='+sid
-	        });
-		}
-	</script>
+	<script	src="${pageContext.request.contextPath}/resource/js/run.js"></script>
 </body>
 </html>

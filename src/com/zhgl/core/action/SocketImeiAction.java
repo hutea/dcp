@@ -8,13 +8,17 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
-import org.omg.CORBA.UserException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,13 +28,15 @@ import com.zhgl.api.parse.json.UseRecord;
 import com.zhgl.core.ebean.DeviceModel;
 import com.zhgl.core.ebean.Point;
 import com.zhgl.core.ebean.SocketImei;
-import com.zhgl.core.ebean.TowerCrane;
 import com.zhgl.core.ebean.TowerCraneDevice;
 import com.zhgl.core.ebean.TowerCraneStatus;
 import com.zhgl.core.service.DeviceModelService;
 import com.zhgl.core.service.PointService;
 import com.zhgl.core.service.SocketImeiService;
+import com.zhgl.core.service.TowerCraneDeviceService;
+import com.zhgl.core.service.TowerCraneStatusService;
 import com.zhgl.run.server.SocketUtil;
+import com.zhgl.util.IdentityGenerator;
 import com.zhgl.util.dao.PageView;
 
 @RequestMapping("/manage/device")
@@ -42,7 +48,13 @@ public class SocketImeiAction {
 	private PointService pointService;
 	@Resource
 	private DeviceModelService deviceModelService;
+	@Resource
+	private TowerCraneStatusService towerCraneStatusService;
+	@Resource
+	private TowerCraneDeviceService towerCraneDeviceService;
 	private int maxresult = 10;
+	@Autowired
+	private HttpServletRequest request;
 
 	@RequestMapping("/list")
 	public ModelAndView list(
@@ -93,26 +105,52 @@ public class SocketImeiAction {
 	 */
 	@RequestMapping(value = "/save/data")
 	public @ResponseBody
-	String saveData(int sid, long mid, long pid, int enable,
+	String saveData(long sid, long mid, long pid, int enable,
 			@RequestParam(required = false) String fuid, String lnglat,
 			String scenenum) {
 		try {
+			// 开始前进行数据校验：
 			SocketImei entity = socketImeiService.find(sid);
 			entity.setPoint(pointService.find(pid));
 			entity.setDeviceModel(deviceModelService.find(mid));
 			if (enable == 1) {
 				entity.setEnable(true);
+			} else {
+				entity.setEnable(false);
 			}
 			if (entity.getActiveDate() == null) {
 				entity.setActiveDate(new Date());
 			}
-			
-			//同步省平台相关数据
+
+			// 处理经纬度及现场编号
+			TowerCraneDevice towerCraneDevice = entity.getTowerCraneDevice();
+			String longitude = lnglat.split(",")[0];
+			String latitude = lnglat.split(",")[1];
+			if (towerCraneDevice == null) {
+				towerCraneDevice = new TowerCraneDevice();
+				towerCraneDevice.setDnumber(scenenum);
+				towerCraneDevice.setLatitude(latitude);
+				towerCraneDevice.setLongitude(longitude);
+				towerCraneDevice.setId(IdentityGenerator.generatorID());
+				towerCraneDevice.setSocketImei(entity);
+				towerCraneDevice.setRegTime(new Date());
+				towerCraneDeviceService.save(towerCraneDevice);
+			} else {
+				towerCraneDevice.setDnumber(scenenum);
+				towerCraneDevice.setLatitude(latitude);
+				towerCraneDevice.setLongitude(longitude);
+				towerCraneDevice.setRegTime(new Date());
+				towerCraneDeviceService.update(towerCraneDevice);
+			}
+			// 同步省平台相关数据
 			System.out.println(fuid);
 			if (fuid != null && !"".equals(fuid)) {
-				
+				towerCraneStatusService.syncData(fuid, entity);
+				JsonUtil.postPoint(fuid, sid, entity.getPoint(), request
+						.getServletContext().getAttribute("basePath") + "");
 			}
 			socketImeiService.update(entity);
+			// 回传俯视点信息
 			return "success";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -126,14 +164,15 @@ public class SocketImeiAction {
 	 * @param sid
 	 * @return
 	 */
-	@RequestMapping(value = "/query/find/{sid}")
+	@RequestMapping(value = "/query/find/{sid}", produces = "text/plain;charset=UTF-8")
 	public @ResponseBody
-	String queryOneSocketImet(@PathVariable int sid) {
+	String queryOneSocketImet(@PathVariable long sid) {
 		try {
+			System.out.println(sid);
 			Map<String, Object> dataMap = new HashMap<String, Object>();
 			ObjectMapper mapper = new ObjectMapper();
 			SocketImei si = socketImeiService.find(sid);
-			dataMap.put("sid", si.getSid());
+			dataMap.put("sid", si.getId());
 			DeviceModel deviceModel = si.getDeviceModel();
 			if (deviceModel != null) {
 				dataMap.put("mid", deviceModel.getId());
@@ -157,8 +196,18 @@ public class SocketImeiAction {
 			if (towerCraneDevice != null) {
 				dataMap.put("lnglat", towerCraneDevice.getLongitude() + ","
 						+ towerCraneDevice.getLatitude());
+				dataMap.put("scenenum", towerCraneDevice.getDnumber());
 			} else {
 				dataMap.put("lnglat", "");
+				dataMap.put("scenenum", "");
+			}
+			TowerCraneStatus towerCraneStatus = si.getTowerCraneStatus();
+			if (towerCraneStatus != null) {
+				dataMap.put("fuid", towerCraneStatus.getFuid());
+				dataMap.put("funum", towerCraneStatus.getfUseRecordNUmber());
+			} else {
+				dataMap.put("fuid", "");
+				dataMap.put("funum", "");
 			}
 			dataMap.put("imei", si.getImei());
 			dataMap.put("imeiASCII", SocketUtil.analyticASCII(si.getImei()));
@@ -180,7 +229,6 @@ public class SocketImeiAction {
 	public @ResponseBody
 	String useNumberQueryJson(@PathVariable String keyword) {
 		try {
-			System.out.println(keyword);
 			ObjectMapper mapper = new ObjectMapper();
 			UseData useData = JsonUtil.parseUseData(keyword, "");
 			List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();

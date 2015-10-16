@@ -18,6 +18,6 @@ public interface TowerCraneDeviceService extends DAO<TowerCraneDevice> {
 	 * @param sockedId
 	 *            塔机通讯ID(对应于协议中的设备代码)
 	 */
-	public TowerCraneDevice findByTCID(String tcid);
+	public TowerCraneDevice findBySID(long socketImeiId);
 
 }

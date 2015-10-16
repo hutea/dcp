@@ -19,8 +19,7 @@ import javax.persistence.Transient;
 public class SocketImei {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	/**用作通讯ID*/
-	private int sid;
+	private long id;
 
 	/** 在每次使用完后，给IMEI号+日期后缀； */
 	@Column(unique = true)
@@ -28,6 +27,9 @@ public class SocketImei {
 
 	/** 是否禁用该IMEI，如果禁用数据则不能发送 */
 	private Boolean enable = false;
+
+	/** state=1:使用中 */
+	private int state = 1;
 
 	/** 加入时间 */
 	private Date joinDate;
@@ -40,6 +42,9 @@ public class SocketImei {
 
 	@OneToOne(cascade = CascadeType.ALL, mappedBy = "socketImei")
 	private TowerCraneDevice towerCraneDevice;
+
+	@OneToOne(cascade = CascadeType.ALL, mappedBy = "socketImei")
+	private SocketIdRecord socketIdRecord;
 
 	@ManyToOne(cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "point_id")
@@ -55,21 +60,13 @@ public class SocketImei {
 	@Transient
 	private Boolean online = false;
 	@Transient
-	private Double cycleTotalWeight;// 累计吊重
+	private Double totalWeight;// 累计吊重
 	@Transient
-	private Long alarmCount;// 报警次数
+	private Long totalAlarm;// 报警次数
 	@Transient
-	private Long violationCount;// 违章次数
+	private Long totalVio;// 违章次数
 	@Transient
 	private String curretnAlarm; // 实时报警
-
-	public int getSid() {
-		return sid;
-	}
-
-	public void setSid(int sid) {
-		this.sid = sid;
-	}
 
 	public String getImei() {
 		return imei;
@@ -109,6 +106,14 @@ public class SocketImei {
 
 	public void setTowerCraneStatus(TowerCraneStatus towerCraneStatus) {
 		this.towerCraneStatus = towerCraneStatus;
+	}
+
+	public SocketIdRecord getSocketIdRecord() {
+		return socketIdRecord;
+	}
+
+	public void setSocketIdRecord(SocketIdRecord socketIdRecord) {
+		this.socketIdRecord = socketIdRecord;
 	}
 
 	public TowerCraneDevice getTowerCraneDevice() {
@@ -151,28 +156,28 @@ public class SocketImei {
 		this.online = online;
 	}
 
-	public Double getCycleTotalWeight() {
-		return cycleTotalWeight;
+	public Double getTotalWeight() {
+		return totalWeight;
 	}
 
-	public void setCycleTotalWeight(Double cycleTotalWeight) {
-		this.cycleTotalWeight = cycleTotalWeight;
+	public void setTotalWeight(Double totalWeight) {
+		this.totalWeight = totalWeight;
 	}
 
-	public Long getAlarmCount() {
-		return alarmCount;
+	public Long getTotalAlarm() {
+		return totalAlarm;
 	}
 
-	public void setAlarmCount(Long alarmCount) {
-		this.alarmCount = alarmCount;
+	public void setTotalAlarm(Long totalAlarm) {
+		this.totalAlarm = totalAlarm;
 	}
 
-	public Long getViolationCount() {
-		return violationCount;
+	public Long getTotalVio() {
+		return totalVio;
 	}
 
-	public void setViolationCount(Long violationCount) {
-		this.violationCount = violationCount;
+	public void setTotalVio(Long totalVio) {
+		this.totalVio = totalVio;
 	}
 
 	public String getCurretnAlarm() {
@@ -183,4 +188,19 @@ public class SocketImei {
 		this.curretnAlarm = curretnAlarm;
 	}
 
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public int getState() {
+		return state;
+	}
+
+	public void setState(int state) {
+		this.state = state;
+	}
 }

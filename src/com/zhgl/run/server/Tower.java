@@ -18,10 +18,10 @@ public class Tower {
 	private int writeSize = 200; // 数据包累计数，到触发写入时的最大值
 	private boolean lock = false; // 线程同步锁，避免datas被多线程操作出错，synchronized太复杂没用
 
-	private String protocol;	//下发到设备的协议，回应帧类型
+	private String protocol; // 下发到设备的协议，回应帧类型
 
 	// 固定参数
-	private String id; // 塔机ID t_towercrane的主键id
+	private String id; // SocketImei主键id
 	private String propertyNumbers; // 产权编号
 	private String onSiteNum; // 现场编号
 	private int multiple; // 吊绳倍率
@@ -31,7 +31,7 @@ public class Tower {
 	private float forearm; // 起重臂长（前臂）
 	private float backarm; // 平衡臂长（后臂）
 	private float armHeight; // 塔臂高度
-	private float cap;			//塔帽高度
+	private float cap; // 塔帽高度
 	// 限位信息
 	private float leftLimit;// 左限位
 	private float rightLimit;// 右限位
@@ -62,30 +62,28 @@ public class Tower {
 	private long forbidAlarm; // 禁行区碰撞报警编码
 	private long baffleAlarm; // 障碍物碰撞报警编码
 	private long relay; // 继电输出编码
-	
 
 	private String nowAlarm; // 实时报警数据
-	
 
 	public Tower() {
 		datas = new ArrayList<String>();// 初始化数据缓存列表
 	}
 
-	
 	/**
 	 * 初始化数据缓存、开启定时器检查在线状态
 	 * 
 	 */
 	public void startTimer() {
-		timer = new Timer();		
+		timer = new Timer();
 		timer.schedule(new TimerTask() {
 			@Override
 			public void run() {
 				Long currentTime = System.currentTimeMillis();
-				if (updateTime != null && (currentTime - updateTime.getTime()) > 3 * 60 * 1000) {// 如果最后更新时间距当前时间超过3分钟，则离线
+				if (updateTime != null
+						&& (currentTime - updateTime.getTime()) > 3 * 60 * 1000) {// 如果最后更新时间距当前时间超过3分钟，则离线
 					online = false;
-					
-					//System.out.print("离线,准备写入缓存大小"+datas.size());
+
+					// System.out.print("离线,准备写入缓存大小"+datas.size());
 					if (datas.size() > 0)
 						writeFile(); // 离线时内存中有数据，则全部写入文件
 				}
@@ -94,7 +92,7 @@ public class Tower {
 			}
 		}, 0, 1 * 60 * 1000); // 1*60秒=1分钟执行一次检查
 	}
-	
+
 	/**
 	 * 将状态上报数据追加到缓存中
 	 * 
@@ -120,7 +118,7 @@ public class Tower {
 	 */
 	public void writeFile() {
 		try {
-			
+
 			String path = ActiveTowers.path + "\\" + id; // 目录名称为塔机ID：TowerCrane主键
 			File dir = new File(path);
 			if (!dir.exists())
@@ -143,7 +141,7 @@ public class Tower {
 			}
 			lock = true;// 加锁
 
-			//System.out.print(id + "写入文件，清空缓存大小" + datas.size());
+			// System.out.print(id + "写入文件，清空缓存大小" + datas.size());
 
 			for (String data : datas)
 				fw.write(data);
@@ -153,7 +151,7 @@ public class Tower {
 			lock = false;// 解锁
 
 		} catch (IOException e) {
-			//System.out.print(id + "文件写入失败:" + e.toString());
+			// System.out.print(id + "文件写入失败:" + e.toString());
 			e.printStackTrace();
 		}
 	}
@@ -165,7 +163,7 @@ public class Tower {
 	public void setProtocol(String protocol) {
 		this.protocol = protocol;
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -468,5 +466,5 @@ public class Tower {
 
 	public void setNowAlarm(String nowAlarm) {
 		this.nowAlarm = nowAlarm;
-	}	
+	}
 }

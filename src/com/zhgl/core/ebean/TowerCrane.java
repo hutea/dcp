@@ -72,20 +72,8 @@ public class TowerCrane {
 	/** 手动注销原因 */
 	private String fZhuXiaoMemo;
 
-	@OneToOne(optional = true)
-	@JoinColumn(name = "tcs_id")
-	private TowerCraneStatus currentStatus;// 塔吊 当前“安用拆”状态表
-
 	public String getSbid() {
 		return sbid;
-	}
-
-	public TowerCraneStatus getCurrentStatus() {
-		return currentStatus;
-	}
-
-	public void setCurrentStatus(TowerCraneStatus currentStatus) {
-		this.currentStatus = currentStatus;
 	}
 
 	public void setSbid(String sbid) {

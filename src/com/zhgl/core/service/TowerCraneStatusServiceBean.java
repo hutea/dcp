@@ -1,11 +1,10 @@
 package com.zhgl.core.service;
 
-import org.hibernate.id.uuid.Helper;
 import org.springframework.stereotype.Service;
 
+import com.zhgl.api.parse.JsonUtil;
 import com.zhgl.core.ebean.SocketImei;
 import com.zhgl.core.ebean.TowerCraneStatus;
-import com.zhgl.util.HelperUtil;
 import com.zhgl.util.IdentityGenerator;
 import com.zhgl.util.dao.DAOSupport;
 
@@ -13,34 +12,30 @@ import com.zhgl.util.dao.DAOSupport;
 public class TowerCraneStatusServiceBean extends DAOSupport<TowerCraneStatus>
 		implements TowerCraneStatusService {
 
-	/***
-	 * 同步省平台数据，如果没有则插入新数据，有则对数据进行更新
-	 * 
-	 * @param fuid
-	 * @param si
-	 */
+	@Override
 	public void syncData(String fuid, SocketImei si) {
-		TowerCraneStatus towerCraneStatus = this.find(fuid);
-		boolean isSave = false;
+		TowerCraneStatus towerCraneStatus = this.findBySid(si.getId());
 		if (towerCraneStatus == null) {
-			isSave = true;
-			towerCraneStatus = new TowerCraneStatus();
+			towerCraneStatus = JsonUtil.parseByfuid(fuid);
 			towerCraneStatus.setId(IdentityGenerator.generatorID());
-		}
-		towerCraneStatus.setSocketImei(si);
-		if (isSave) {
+			towerCraneStatus.setSocketImei(si);
+			towerCraneStatus.setFuid(fuid);
 			this.save(towerCraneStatus);
 		} else {
+			TowerCraneStatus tcsNew = JsonUtil.parseByfuid(fuid);
+			towerCraneStatus.setfAcceptDate(tcsNew.getfAcceptDate());
+			// .....
+			towerCraneStatus.setSocketImei(si);
 			this.update(towerCraneStatus);
 		}
 	}
 
-	private TowerCraneStatus findByFuid(String fuid) {
+	private TowerCraneStatus findBySid(long sid) {
 		try {
 			return (TowerCraneStatus) em
 					.createQuery(
-							"select o form TowerCraneStatus o where o.fuid=?1")
-					.setParameter(1, fuid).getSingleResult();
+							"select o from TowerCraneStatus o where o.socketImei.id=?1")
+					.setParameter(1, sid).getSingleResult();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;

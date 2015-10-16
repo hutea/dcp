@@ -11,12 +11,12 @@ public interface EventAlarmService extends DAO<EventAlarm> {
 	 * 根据塔机id找出，传入时间范围内的报警数据，并将报警数据中的报警类型，数量按键值对的方式储存进map
 	 */
 	public HashMap<String, String> getTypeCount(Date beginData, Date endDate,
-			int sid);
+			long sid);
 
 	/**
 	 * 根据塔机id找出，所有的报警数据，并将报警数据中的报警类型，数量按键值对的方式储存进map
 	 */
-	public HashMap<String, String> getTypeCount(int sid);
+	public HashMap<String, String> getTypeCount(long sid);
 
 	/**
 	 * 距当前时间2小时内的报警数据
@@ -24,7 +24,7 @@ public interface EventAlarmService extends DAO<EventAlarm> {
 	 * @param tcsid
 	 * @return
 	 */
-	public EventAlarm nowArarm(int sid);
+	public EventAlarm nowArarm(long sid);
 
 	/**
 	 * 统计指定塔机今日报警数量
@@ -32,10 +32,10 @@ public interface EventAlarmService extends DAO<EventAlarm> {
 	 * @param tcsid
 	 * @return
 	 */
-	public long countToday(int sid);
+	public long countToday(long sid);
 
 	/**
 	 * 查出在此时间范围内,此塔机违章的数量
 	 */
-	public int getCount(Date beginDate, Date endDate, int sid);
+	public int getCount(Date beginDate, Date endDate, long sid);
 }

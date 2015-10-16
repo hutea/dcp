@@ -18,30 +18,58 @@ import org.apache.http.message.BasicNameValuePair;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zhgl.api.parse.json.UseData;
+import com.zhgl.core.ebean.Point;
 import com.zhgl.core.ebean.TowerCraneStatus;
 
 public class JsonUtil {
 	private static String path = "http://118.122.250.29:8010/dy/EquipSys/tools/towerMonitoring.aspx";
 
 	public static void main(String[] args) {
-		parseUseData("00897", "");
+		parseByfuid("54608");
 	}
 
-	public TowerCraneStatus parseByfuid(String fuid) {
-		TowerCraneStatus towerCraneStatus = new TowerCraneStatus();
-		return towerCraneStatus;
+	public static boolean postPoint(String fuid, long sid, Point point,
+			String basePath) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("action", "getUseTower");
+		params.put("useid", fuid);
+		params.put("monitowerid", sid + "");
+		params.put("projectid", point.getId() + "");
+		params.put("projectname", point.getName());
+		params.put("projectaddress", point.getAddress());
+		params.put("basepath", basePath + "/api/device/list/" + point.getId());
+		String json = post(path, params, "UTF-8");
+		System.out.println("提交的数据：" + params);
+		System.out.println("提交俯视点：" + json);
+		return true;
+	}
+
+	public static TowerCraneStatus parseByfuid(String fuid) {
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("action", "getUseData");
+		params.put("fid", fuid);
+		try {
+			String json = post(path, params, "UTF-8");
+			ObjectMapper mapper = new ObjectMapper();
+			TowerCraneStatus towerCraneStatus = mapper.readValue(json,
+					TowerCraneStatus.class);
+			return towerCraneStatus;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	/**
-	 * 通过使用备案编号获取相关数据列表 * @param number
+	 * 通过使用备案编号获取相关数据列表
 	 * 
+	 * @param number
 	 * @param code
 	 * @return
 	 */
 	public static UseData parseUseData(String number, String code) {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("action", "getUseDataList");
-		System.out.println("num:" + number);
 		params.put("userecordnumber", number);
 		try {
 			String json = post(path, params, "UTF-8");

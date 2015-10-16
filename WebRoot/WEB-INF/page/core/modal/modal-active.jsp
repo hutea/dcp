@@ -34,7 +34,7 @@
 			          </div>
 			          <div class="row">
 			            <div class="col-md-3"><h4>经纬度<a href="http://api.map.baidu.com/lbsapi/getpoint" target=window >拾取</a></h4></div>
-			            <div class="col-md-6"><input type="text" id="latlng" class="form-control"></div>
+			            <div class="col-md-6"><input type="text" id="lnglat" class="form-control"></div>
 			          </div>
 			          <div class="row">
 			          	<div class="col-md-3"><h4>设备型号</h4></div>
@@ -60,7 +60,7 @@
 			            <div class="col-md-3"></div>
 			          	<div id="futext" class="col-md-9"></div>
 			          </div>
-			          <div class="row">
+			          <div class="row text-center" style="margin-top: 10px;">
 			            <div id="tip" class="col-md-12"></div>
 			          </div>
 			    </div>

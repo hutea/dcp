@@ -16,7 +16,33 @@
 
 
 二、市平台提供给省平台
-1.获取工程下的所有运行设备
+
+1.获取俯视点下的所有设备
+{
+    "totalNumber": 1, //设备总数
+    "onlineNumber": 0,//在线娄
+    "list": [
+        {
+            "online": "离线",
+            "fRecordNumber": "川AP－S－1204－03776",
+            "fuid": "56462",//使用业务主键ID
+            "sceneNumber": "1212", //现场编号
+            "deviceModel": "SU-002", //设备型号
+            "totalWeight": "0.0", //今日吊重
+            "totalAlarm": "0", //今日报警
+            "totalVio": "0", //今日违章
+            "currentAlarm": "无", //实时报警
+            "baseInfoUrl": "",     //基本信息请求URL
+            "todayWeightyUrl": "", //今日吊重请求URL
+            "todayAlarmUrl": "",   //今日报警请求URL
+            "todayVioUrl": "",    //今日违章请求URL
+            "newDataUrl": "",     //实时数据请求URL
+            "historyDataUrl": "",  //历史数据请求URL
+            "runDataUrl": ""       //运行图请求URL
+        }
+    ]
+}
+
 
 
 

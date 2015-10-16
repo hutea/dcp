@@ -77,13 +77,12 @@ public class ProtocolFinger {
 		TowerCrane towerCrane = towerCraneService.findBySocketId(socketId);
 		TowerCraneStatus towerCraneStatus;
 		try {
-			towerCraneStatus = towerCrane.getCurrentStatus();
+			//towerCraneStatus = towerCrane.getCurrentStatus();
 		} catch (Exception e) {
 			log.info("事件上报【人员身份上报】 TowerCraneStatus中没有找到socketId的塔机" + socketId);
 			return null;
 		}
-		List<Person> persons = personService.listByTCSId(towerCraneStatus
-				.getId());
+		List<Person> persons = null;// personService.listByTCSId(towerCraneStatus.getId());
 		List<Person> drivers = new ArrayList<Person>();
 		for (Person person : persons) {
 			if (person.getVersion() > 0) {// 表示采集过指纹

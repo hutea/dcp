@@ -16,13 +16,13 @@ public class EventViolationServiceBean extends DAOSupport<EventViolation>
 		implements EventViolationService {
 
 	@Override
-	public long countToday(int sid) {
+	public long countToday(long sid) {
 		Date now = new Date();
 		Date endDate = HelperUtil.addDays(now, 1);
 		Date startDate = HelperUtil.reduceDays(endDate, 1);
 		Query query = em
 				.createQuery(
-						"select count(o.id) from EventViolation o where o.socketImei.sid=?1 and o.createTime>=?2 and o.createTime<?3")
+						"select count(o.id) from EventViolation o where o.socketImei.id=?1 and o.createTime>=?2 and o.createTime<?3")
 				.setParameter(1, sid).setParameter(2, startDate)
 				.setParameter(3, endDate);
 		try {
@@ -33,10 +33,10 @@ public class EventViolationServiceBean extends DAOSupport<EventViolation>
 	}
 
 	@Override
-	public HashMap<String, String> getTypeCount(int sid) {
+	public HashMap<String, String> getTypeCount(long sid) {
 		Query query = em
 				.createQuery(
-						"select o.type,count(type) from EventViolation o where o.socketImei.sid=?1 group by o.type")
+						"select o.type,count(type) from EventViolation o where o.socketImei.id=?1 group by o.type")
 				.setParameter(1, sid);
 		HashMap<String, String> map = new HashMap<String, String>();
 		for (Object obj : query.getResultList()) {
@@ -48,10 +48,10 @@ public class EventViolationServiceBean extends DAOSupport<EventViolation>
 
 	@Override
 	public HashMap<String, String> getTypeCount(Date beginDate, Date endDate,
-			int sid) {
+			long sid) {
 		Query query = em
 				.createQuery(
-						"select o.type,count(type) from EventViolation o where o.socketImei.sid=?1 and o.createTime>=?2 and o.createTime<?3  group by o.type")
+						"select o.type,count(type) from EventViolation o where o.socketImei.id=?1 and o.createTime>=?2 and o.createTime<?3  group by o.type")
 				.setParameter(1, sid).setParameter(2, beginDate)
 				.setParameter(3, endDate);
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -63,13 +63,12 @@ public class EventViolationServiceBean extends DAOSupport<EventViolation>
 	}
 
 	@Override
-	public int getCount(Date beginDate, Date endDate, int sid) {
+	public int getCount(Date beginDate, Date endDate, long sid) {
 		Query query = em
 				.createNativeQuery(
-						"select count(o.id) from t_eventViolation o where o.visible=?1 and o.socketImei.sid=?2 and o.createTime<?3 and o.createTime>=?4")
+						"select count(o.id) from t_eventViolation o where o.visible=?1 and o.socketImei.id=?2 and o.createTime<?3 and o.createTime>=?4")
 				.setParameter(1, true).setParameter(2, sid)
 				.setParameter(3, endDate).setParameter(4, beginDate);
 		return Integer.parseInt(query.getSingleResult() + "");
 	}
-
 }

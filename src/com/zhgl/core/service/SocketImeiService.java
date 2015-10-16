@@ -12,4 +12,6 @@ public interface SocketImeiService extends DAO<SocketImei> {
 	 * @return
 	 */
 	public SocketImei findByImei(String imei);
+
+	public SocketImei findBySocketID(int socketId); 
 }

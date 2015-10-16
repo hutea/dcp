@@ -239,8 +239,7 @@ public class ProtocolInfo {
 		if (dataBody.length() == 6) {
 			eara_count++;
 			for (int i = 0; i < 6; i++) {// 删除多余的保护区
-				reservedAreaService.deleteByAreaNumber(towerCrane
-						.getCurrentStatus().getId(), i);
+				//reservedAreaService.deleteByAreaNumber(towerCrane.getCurrentStatus().getId(), i);
 			}
 			if (eara_count > 6)
 				eara_count = 1;
@@ -253,8 +252,7 @@ public class ProtocolInfo {
 				int areaCount = Integer.parseInt(re.getParen(2), 16); // 保护区个数
 				// //System.out.print("保护区个数：" + areaCount);
 				for (int i = 0; i < 6 - areaCount; i++) {// 删除多余的保护区
-					reservedAreaService.deleteByAreaNumber(towerCrane
-							.getCurrentStatus().getId(), areaCount + i + 1);
+					//reservedAreaService.deleteByAreaNumber(towerCrane.getCurrentStatus().getId(), areaCount + i + 1);
 				}
 				long s3 = Long.parseLong(re.getParen(3), 16)
 						| ((long) Math.pow(2, 8));
@@ -418,8 +416,7 @@ public class ProtocolInfo {
 				// //System.out.print(reservedArea);
 				/* 获取保护区元素信息END */
 				if (isSave) {
-					reservedArea.setTowerCraneStatus(towerCrane
-							.getCurrentStatus());
+					//reservedArea.setTowerCraneStatus(towerCrane.getCurrentStatus());
 					reservedAreaService.save(reservedArea);
 				} else {
 					reservedAreaService.update(reservedArea);

@@ -21,7 +21,10 @@ $('#myModal-active').on('show.bs.modal', function(event) {
 			$("#enable").val(jsonObj.enable);
 			$("#mid").val(jsonObj.mid);
 			$("#imei").val(jsonObj.imeiASCII+"("+jsonObj.imei+")");
-			$("#latlng").val(jsonObj.imeiASCII+"("+jsonObj.imei+")");
+			$("#lnglat").val(jsonObj.lnglat);
+			$("#scenenum").val(jsonObj.scenenum);
+			$("#fuid").val(jsonObj.fuid);
+			$("#funum").val(jsonObj.funum);
 			console.log("~~~"+jsonObj.sid);
 			//alert(obj.sid);
 			//console.log(obj.sid);
@@ -128,6 +131,10 @@ function act_save() {
 		scenenum : scenenum,
 		enable : enable
 	}, function(data) {
-		alert(data);
+		if(data=='success'){
+			$('#tip').html("<span style='color:green;'>保存成功<span>");
+		}else{
+			$('#tip').html("<span style='color:red;'>"+data+"<span>");
+		}
 	});
 }

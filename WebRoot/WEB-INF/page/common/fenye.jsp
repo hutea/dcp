@@ -5,7 +5,7 @@
 		<nav>
 			<ul class="pagination  pagination-md"> 
 				<c:if test="${(pageView.currentPage-1)<1}" >
-					<li  class="disabled" > <a href='#' >Prev</a> </li>
+					<li  class="disabled" > <a href='javascript:void(0)' >Prev</a> </li>
 				</c:if>
 				<c:if test="${(pageView.currentPage-1)>=1}" >
 					<li> <a href='javascript:topage(${pageView.currentPage+1})' >Prev</a> </li>
@@ -27,7 +27,7 @@
 				</c:if>
 				
 				<c:if test="${(pageView.currentPage+1)>pageView.totalPage}" >
-					<li class="disabled"> <a href='#' >Next</a> </li>
+					<li class="disabled"> <a href='javascript:void(0)' >Next</a> </li>
 				</c:if>
 				<c:if test="${(pageView.currentPage+1)<=pageView.totalPage}" >
 					<li> <a href='javascript:topage(${pageView.currentPage+1})' >Next</a> </li>

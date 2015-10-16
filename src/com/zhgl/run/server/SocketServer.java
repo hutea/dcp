@@ -35,13 +35,12 @@ public class SocketServer extends IoHandlerAdapter {
 	public void messageReceived(IoSession session, Object message) throws Exception {
 		Long start = System.currentTimeMillis();
 		String data = ((String) message).replaceAll(" ", "");			//数据转换为String，并去除空格
-
 		DataParse dataParse = new DataParse(data);				//解析校验帧格式
 		if(!dataParse.checkFomart()) {
 			log.info("拒绝格式错误帧：" + data + " 【" + session.getRemoteAddress() + "】");
 			return;
 		}
-		//log.info("接收帧：" + data + " 【" + session.getRemoteAddress() + "】");
+		log.info("接收帧：" + data + " 【" + session.getRemoteAddress() + "】");
 
 		String response = null;
 		switch (dataParse.getFrameType()) {							//帧类型

@@ -16,13 +16,13 @@ public class EventAlarmServiceBean extends DAOSupport<EventAlarm> implements
 		EventAlarmService {
 
 	@Override
-	public long countToday(int sid) {
+	public long countToday(long sid) {
 		Date now = new Date();
 		Date endDate = HelperUtil.addDays(now, 1);
 		Date startDate = HelperUtil.reduceDays(endDate, 1);
 		Query query = em
 				.createQuery(
-						"select count(o.id) from EventAlarm o where o.socketImei.sid=?1 and o.createTime>=?2 and o.createTime<?3 and o.visible=true")
+						"select count(o.id) from EventAlarm o where o.socketImei.id=?1 and o.createTime>=?2 and o.createTime<?3 and o.visible=true")
 				.setParameter(1, sid).setParameter(2, startDate)
 				.setParameter(3, endDate);
 		try {
@@ -33,12 +33,12 @@ public class EventAlarmServiceBean extends DAOSupport<EventAlarm> implements
 	}
 
 	@Override
-	public EventAlarm nowArarm(int sid) {
+	public EventAlarm nowArarm(long sid) {
 		Date endDate = new Date();
 		Date startDate = HelperUtil.reduceHours(endDate, 2);
 		Query query = em
 				.createQuery(
-						"select o from EventAlarm o where o.socketImei.sid=?1 and o.createTime>=?2 and o.createTime<=?3 and o.visible=true order by id desc")
+						"select o from EventAlarm o where o.socketImei.id=?1 and o.createTime>=?2 and o.createTime<=?3 and o.visible=true order by id desc")
 				.setParameter(1, sid).setParameter(2, startDate)
 				.setParameter(3, endDate);
 		try {
@@ -53,10 +53,10 @@ public class EventAlarmServiceBean extends DAOSupport<EventAlarm> implements
 	 */
 	@Override
 	public HashMap<String, String> getTypeCount(Date beginDate, Date endDate,
-			int sid) {
+			long sid) {
 		Query query = em
 				.createQuery(
-						"select o.alarmType,count(alarmType) from EventAlarm o where o.socketImei.sid=?1 and o.createTime>=?2 and o.createTime<?3 and o.visible=true group by o.alarmType")
+						"select o.alarmType,count(alarmType) from EventAlarm o where o.socketImei.id=?1 and o.createTime>=?2 and o.createTime<?3 and o.visible=true group by o.alarmType")
 				.setParameter(1, sid).setParameter(2, beginDate)
 				.setParameter(3, endDate);
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -72,10 +72,10 @@ public class EventAlarmServiceBean extends DAOSupport<EventAlarm> implements
 	 * 根据塔机id找出，所有的报警数据，并将报警数据中的报警类型，数量按键值对的方式储存进map
 	 */
 	@Override
-	public HashMap<String, String> getTypeCount(int sid) {
+	public HashMap<String, String> getTypeCount(long sid) {
 		Query query = em
 				.createQuery(
-						"select o.alarmType,count(alarmType) from EventAlarm o where o.socketImei.sid=?1 and o.visible=true group by o.alarmType")
+						"select o.alarmType,count(alarmType) from EventAlarm o where o.socketImei.id=?1 and o.visible=true group by o.alarmType")
 				.setParameter(1, sid);
 		HashMap<String, String> map = new HashMap<String, String>();
 		for (Object obj : query.getResultList()) {
@@ -87,10 +87,10 @@ public class EventAlarmServiceBean extends DAOSupport<EventAlarm> implements
 	}
 
 	@Override
-	public int getCount(Date beginDate, Date endDate, int sid) {
+	public int getCount(Date beginDate, Date endDate, long sid) {
 		Query query = em
 				.createNativeQuery(
-						"select count(o.id) from  t_eventAlarm o where o.visible=?1 and o.socketImei.sid=?2 and o.createTime<?3 and o.createTime>=?4")
+						"select count(o.id) from  t_eventAlarm o where o.visible=?1 and o.socketImei.id=?2 and o.createTime<?3 and o.createTime>=?4")
 				.setParameter(1, true).setParameter(2, sid)
 				.setParameter(3, endDate).setParameter(4, beginDate);
 		return Integer.parseInt(query.getSingleResult() + "");

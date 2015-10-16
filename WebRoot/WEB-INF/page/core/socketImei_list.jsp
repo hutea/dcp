@@ -90,18 +90,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	                           </thead>
 	                           <tbody>
 	                                  <c:forEach items="${pageView.records}" var="entry" varStatus="s">  
-		                           	  	<tr id="tr_${entry.sid}">
+		                           	  	<tr id="tr_${entry.id}">
 		                           		 <td>${s.index+1}</td> 
-		                           		 <td>${entry.sid}</td> 
+		                           		 <td>${entry.id}</td> 
 		                           		 <td>${entry.imei}</td> 
-		                           		 <td>${entry.towerCraneStatus.towerCrane.babh}</td> 
+		                           		 <td>${entry.towerCraneStatus.fUseRecordNUmber}</td> 
 		                           		 <td>${entry.point.name}</td> 
 		                           		 <td>${entry.deviceModel.model}</td> 
 		                            	 <td title='<fmt:formatDate value="${entry.joinDate}" pattern="hh:mm:ss "/>'><fmt:formatDate value="${entry.joinDate}" pattern="yyyy-MM-dd"/></td> 
 		                            	 <td title='<fmt:formatDate value="${entry.activeDate}" pattern="hh:mm:ss "/>'><fmt:formatDate value="${entry.activeDate}" pattern="yyyy-MM-dd"/></td> 
 		                            	 <td title='<fmt:formatDate value="${entry.towerCraneDevice.regTime}" pattern="hh:mm:ss "/>'><fmt:formatDate value="${entry.towerCraneDevice.regTime}" pattern="yyyy-MM-dd"/></td> 
 		                           		 <td>
-		                           		 	<a href="javascript:void(0)" class="act-atag"  data-toggle="modal" data-target="#myModal-active"  data-whatever="${entry.sid}">注册</a>
+		                           		 	<a href="javascript:void(0)" class="act-atag"  data-toggle="modal" data-target="#myModal-active"  data-whatever="${entry.id}">注册</a>
 		                           		 </td> 
 		                           	  	</tr>
 		                           	  </c:forEach>

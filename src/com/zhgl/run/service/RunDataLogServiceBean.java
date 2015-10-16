@@ -32,11 +32,11 @@ public class RunDataLogServiceBean extends DAOSupport<RunDataLog> implements
 			if (frameType == 0) {// 身份验证请求帧:通讯ID
 				TowerCrane towerCrane = towerCraneService.findByImei(dataParse
 						.getDeviceCode());
-				log.setCurrentStatus(towerCrane.getCurrentStatus());
+				//log.setCurrentStatus(towerCrane.getCurrentStatus());
 			} else {
 				int socketId = Integer.parseInt(dataParse.getDeviceCode(), 16);
 				TowerCrane tc = towerCraneService.findBySocketId(socketId);
-				log.setCurrentStatus(tc.getCurrentStatus());
+				//log.setCurrentStatus(tc.getCurrentStatus());
 			}
 		} catch (Exception e) {
 			log.setCurrentStatus(null);

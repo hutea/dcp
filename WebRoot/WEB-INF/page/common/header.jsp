@@ -43,12 +43,12 @@
 							<li class="dropdown-title">
 								<span><i class="fa fa-leaf"></i> Theme Skins</span>
 							</li>
-							<li><a href="#" data-skin="default">Subtle (default)</a></li>
-							<li><a href="#" data-skin="night">Night</a></li>
-							<li><a href="#" data-skin="earth">Earth</a></li>
-							<li><a href="#" data-skin="utopia">Utopia</a></li>
-							<li><a href="#" data-skin="nature">Nature</a></li>
-							<li><a href="#" data-skin="graphite">Graphite</a></li>
+							<li><a href="javascript:void(0)" data-skin="default">Subtle (default)</a></li>
+							<li><a href="javascript:void(0)" data-skin="night">Night</a></li>
+							<li><a href="javascript:void(0)" data-skin="earth">Earth</a></li>
+							<li><a href="javascript:void(0)" data-skin="utopia">Utopia</a></li>
+							<li><a href="javascript:void(0)" data-skin="nature">Nature</a></li>
+							<li><a href="javascript:void(0)" data-skin="graphite">Graphite</a></li>
 						 </ul>
 					</li>
 				</ul>

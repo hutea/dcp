@@ -35,7 +35,7 @@
 					<li><a class="" href="wizards_validations.html"><span class="sub-menu-text">保养管理</span></a></li>
 				</ul>
 			</li>
-			<li><a class="" href="inbox.html"><i class="fa fa-map-marker fa-fw"></i> <span class="menu-text">电子地图</span></a></li>
+			<li class='${(m>40&&m<50)?"active":"" }'><a class="" href="${pageContext.request.contextPath}/manage/run/map"><i class="fa fa-desktop fa-fw"></i> <span class="menu-text">电子地图</span></a></li>
 			
 			<li class='has-sub ${(m>50&&m<60)?"active":"" }' >
 				<a href="javascript:;" class="">
@@ -56,7 +56,7 @@
 				<ul class="sub">
 					<li  class='${m==61?"current":"" }'><a class="" href="${pageContext.request.contextPath}/manage/point/list"><span class="sub-menu-text">俯视点管理</span></a></li>
 					<li><a class="" href="email_templates.html"><span class="sub-menu-text">帐户管理</span></a></li>
-					<li><a class="" href="email_templates.html"><span class="sub-menu-text">参数设置</span></a></li>
+					<li  class='${m==63?"current":"" }'><a class="" href="${pageContext.request.contextPath}/manage/config/param"><span class="sub-menu-text">系统参数</span></a></li>
 				</ul>
 			</li>
 		</ul>

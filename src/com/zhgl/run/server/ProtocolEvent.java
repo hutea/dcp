@@ -135,7 +135,7 @@ public class ProtocolEvent {
 		Date date = new Date();
 		EventAlarm eventAlarm = new EventAlarm();
 		eventAlarm.setId(IdentityGenerator.generatorID());
-		SocketImei socketImei = socketImeiService.find(socketId);
+		SocketImei socketImei = socketImeiService.findBySocketID(socketId);
 		if (socketImei == null) {
 			log.info("事件上报【报警上报】 TowerCraneStatus中没有找到socketId的塔机" + socketId);
 			return null;
@@ -336,7 +336,7 @@ public class ProtocolEvent {
 		Date date = new Date();
 		EventViolation eventViolation = new EventViolation();
 
-		SocketImei socketImei = socketImeiService.find(socketId);
+		SocketImei socketImei = socketImeiService.findBySocketID(socketId);
 		if (socketImei == null) {
 			log.info("事件上报【违章上报】 TowerCraneStatus中没有找到socketId的塔机" + socketId);
 			return null;
@@ -412,7 +412,7 @@ public class ProtocolEvent {
 		}
 		Date date = new Date();
 		EventFault eventFault = new EventFault();
-		SocketImei socketImei = socketImeiService.find(socketId);
+		SocketImei socketImei = socketImeiService.findBySocketID(socketId);
 		if (socketImei == null) {
 			log.info("事件上报【故障上报】 TowerCraneStatus中没有找到socketId的塔机" + socketId);
 			return null;
@@ -457,7 +457,7 @@ public class ProtocolEvent {
 		}
 		Date date = new Date();
 		EventWorkCycle eventWorkCycle = new EventWorkCycle();
-		SocketImei socketImei = socketImeiService.find(socketId);
+		SocketImei socketImei = socketImeiService.findBySocketID(socketId);
 		if (socketImei == null) {
 			log.info("事件上报【工作循环上报】 TowerCraneStatus中没有找到socketId的塔机" + socketId);
 			return null;
@@ -533,7 +533,7 @@ public class ProtocolEvent {
 			log.info("事件上报-人员身份上报传入的数据格式不正确" + dataBody);
 			return null;
 		}
-		SocketImei socketImei = socketImeiService.find(socketId);
+		SocketImei socketImei = socketImeiService.findBySocketID(socketId);
 		if (socketImei == null) {
 			log.info("事件上报【人员身份上报】 TowerCraneStatus中没有找到socketId的塔机" + socketId);
 			return null;
@@ -578,7 +578,7 @@ public class ProtocolEvent {
 			log.info("事件上报-开关机上报传入的数据格式不正确" + dataBody);
 			return null;
 		}
-		SocketImei socketImei = socketImeiService.find(socketId);
+		SocketImei socketImei = socketImeiService.findBySocketID(socketId);
 		if (socketImei == null) {
 			log.info("事件上报【开关机上报】 TowerCraneStatus中没有找到socketId的塔机" + socketId);
 			return null;
@@ -615,7 +615,7 @@ public class ProtocolEvent {
 			log.info("事件上报-升降上报传入的数据格式不正确" + dataBody);
 			return null;
 		}
-		SocketImei socketImei = socketImeiService.find(socketId);
+		SocketImei socketImei = socketImeiService.findBySocketID(socketId);
 		Date date = new Date();
 		int personId = Integer.parseInt(re.getParen(2), 16);// 操作人员ID
 		// Person person = personService.find(personId);// 根据ID获取操作人员

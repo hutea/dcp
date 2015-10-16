@@ -16,8 +16,9 @@ public class TowerCraneDeviceServiceBean extends DAOSupport<TowerCraneDevice>
 
 	@Override
 	public TowerCraneDevice findBySocketId(Integer socketId) {
-		Query query = em.createQuery(
-				"select o from  TowerCraneDevice o where o.socketImei.id=?1")
+		Query query = em
+				.createQuery(
+						"select o from  TowerCraneDevice o where o.socketImei.socketIdRecord.sid=?1")
 				.setParameter(1, socketId);
 		try {
 			return (TowerCraneDevice) query.getSingleResult();
@@ -27,11 +28,10 @@ public class TowerCraneDeviceServiceBean extends DAOSupport<TowerCraneDevice>
 	}
 
 	@Override
-	public TowerCraneDevice findByTCID(String tcid) {
-		Query query = em
-				.createQuery(
-						"select o from  TowerCraneDevice o where o.towerCraneStatus.towerCrane.id=?1")
-				.setParameter(1, tcid);
+	public TowerCraneDevice findBySID(long socketImeiId) {
+		Query query = em.createQuery(
+				"select o from  TowerCraneDevice o where o.socketImei.id=?1")
+				.setParameter(1, socketImeiId);
 		try {
 			return (TowerCraneDevice) query.getSingleResult();
 		} catch (Exception e) {

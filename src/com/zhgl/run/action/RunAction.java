@@ -69,7 +69,13 @@ public class RunAction {
 		mav.addObject("pageView", pageView);
 		mav.addObject("page", page);
 		mav.addObject("queryContent", queryContent);
-		mav.addObject("m", 61);
+		mav.addObject("m", 11);
+		Date now = new Date();
+		Date endDate = HelperUtil.addDays(now, 1);
+		Date startDate = HelperUtil.reduceDays(endDate, 1);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		mav.addObject("startDate", sdf.format(startDate));
+		mav.addObject("endDate", sdf.format(endDate));
 		return mav;
 	}
 
@@ -84,26 +90,35 @@ public class RunAction {
 		params.add(pid);
 		List<SocketImei> dataList = socketImeiService.getScrollData(
 				jpql.toString(), params.toArray(), orderby).getResultList();
-
+		int deviceOnlineNumber = 0;
 		for (SocketImei si : dataList) {
-			si.setOnline(ActiveTowers.isOnline(si.getSid()));
+			boolean online = false;
+			if (si.getSocketIdRecord() != null) {
+				online = ActiveTowers.isOnline(si.getSocketIdRecord().getSid());
+			}
+			si.setOnline(online);
+			if (online) {
+				deviceOnlineNumber = deviceOnlineNumber + 1;
+			}
 			// 今日累积吊重
 			Date now = new Date();
 			Date endDate = HelperUtil.addDays(now, 1);
 			Date startDate = HelperUtil.reduceDays(endDate, 1);
 			double countWeight = eventWorkCycleService.countWeight(startDate,
-					endDate, si.getSid());
-			si.setCycleTotalWeight(countWeight);
+					endDate, si.getId());
+			si.setTotalWeight(countWeight);
 			// 今日报警
-			long countArlarm = eventAlarmService.countToday(si.getSid());
-			si.setAlarmCount(countArlarm);
+			long countAlarm = eventAlarmService.countToday(si.getId());
+			si.setTotalAlarm(countAlarm);
 			// 今日违章
-			long countVio = eventViolationService.countToday(si.getSid());
-			si.setViolationCount(countVio);
+			long countVio = eventViolationService.countToday(si.getId());
+			si.setTotalVio(countVio);
 			// 实时报警
 			si.setCurretnAlarm("无");
 		}
 		mav.addObject("dataList", dataList);
+		mav.addObject("deviceTotalNumber", dataList.size());
+		mav.addObject("deviceOnlineNumber", deviceOnlineNumber);
 		return mav;
 	}
 }

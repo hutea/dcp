@@ -46,10 +46,12 @@ public class ProtocolLogin {
 				return SocketResoponseUtil.authResponse(dataParse, 2, 0); // 返回0x02设备代码未注册
 			} else { // 塔机设备已经注册
 				log.info("设备身份验证imei：" + deviceCode);
-				Tower tower = ActiveTowers.getTower(socketImei.getSid()); // 如果登录过，则在内存中有对象存在，就不用再次创建
+				Tower tower = ActiveTowers.getTower(socketImei
+						.getSocketIdRecord().getSid()); // 如果登录过，则在内存中有对象存在，就不用再次创建
 				if (tower == null) { // 只要登录过一次，则内存对象就一直存在，除非服务器重启
 					TowerCraneDevice towerCraneDevice = towerCraneDeviceService
-							.findBySocketId(socketImei.getSid());// 找出设备对象
+							.findBySocketId(socketImei.getSocketIdRecord()
+									.getSid());// 找出设备对象
 					tower = new Tower(); // 新建一个塔机对象
 					try {
 						tower.setPropertyNumbers(socketImei
@@ -94,9 +96,10 @@ public class ProtocolLogin {
 				tower.setOnline(true); // 设置在线
 				tower.setUpdateTime(new Date()); // 设置更新时间
 
-				ActiveTowers.update(socketImei.getSid(), tower);// 首次登录则根据imei查询出塔机ID和通信ID,添加到ActiveTowers中，如果存在则put更新
+				ActiveTowers.update(socketImei.getSocketIdRecord().getSid(),
+						tower);// 首次登录则根据imei查询出塔机ID和通信ID,添加到ActiveTowers中，如果存在则put更新
 				return SocketResoponseUtil.authResponse(dataParse, 0,
-						socketImei.getSid());// 验证通过，返回通信ID
+						socketImei.getSocketIdRecord().getSid());// 验证通过，返回通信ID
 			}
 		} else {
 			log.info("身份验证帧格式错误：" + dataParse.getData());
