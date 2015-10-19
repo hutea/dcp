@@ -104,8 +104,8 @@ public class RunAction {
 			Date now = new Date();
 			Date endDate = HelperUtil.addDays(now, 1);
 			Date startDate = HelperUtil.reduceDays(endDate, 1);
-			double countWeight = eventWorkCycleService.countWeight(startDate,
-					endDate, si.getId());
+			double countWeight = eventWorkCycleService.countWeight(si.getId(),
+					startDate, endDate);
 			si.setTotalWeight(countWeight);
 			// 今日报警
 			long countAlarm = eventAlarmService.countToday(si.getId());

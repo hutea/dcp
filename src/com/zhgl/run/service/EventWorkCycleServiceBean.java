@@ -16,20 +16,17 @@ public class EventWorkCycleServiceBean extends DAOSupport<EventWorkCycle>
 		implements EventWorkCycleService {
 
 	@Override
-	public int countEventById(long sid) {
+	public int countNumber(long sid) {
 		Query query = em
 				.createQuery(
 						"select count(o.id) from  EventWorkCycle o where o.visible=?1 and o.socketImei.id=?2")
 				.setParameter(1, true).setParameter(2, sid);
-		if (query.getSingleResult() == null) {
-			return 0;
-		}
 		return Integer.parseInt(query.getSingleResult() + "");
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public double countWeightEvent(long id) {
+	public double countWeight(long id) {
 		Query query = em
 				.createQuery(
 						"select o.largestWeight from  EventWorkCycle o where o.visible=?1 and o.socketImei.id=?2")
@@ -47,7 +44,7 @@ public class EventWorkCycleServiceBean extends DAOSupport<EventWorkCycle>
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public int countTimeEvent(long sid) {
+	public int countTime(long sid) {
 		Query query = em
 				.createQuery(
 						"select o from  EventWorkCycle o where o.visible=?1 and o.socketImei.id=?2")
@@ -67,7 +64,7 @@ public class EventWorkCycleServiceBean extends DAOSupport<EventWorkCycle>
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public double countWeight(Date beginDate, Date endDate, long sid) {
+	public double countWeight(long sid, Date beginDate, Date endDate) {
 		Query query = em
 				.createQuery(
 						"select o.largestWeight from EventWorkCycle o where o.visible=?1 and o.socketImei.id=?2 and o.startTime<?3 and o.startTime>=?4")
@@ -85,23 +82,18 @@ public class EventWorkCycleServiceBean extends DAOSupport<EventWorkCycle>
 	 * 根据塔机状态id,与起始时间，查询此塔机在此起始时间范围内的所有的工作循环数据的条数
 	 */
 	@Override
-	public int countEvent(Date beginDate, Date endDate, long sid) {
+	public int countNumber(long sid, Date beginDate, Date endDate) {
 		Query query = em
-				.createNativeQuery(
-						"select count(o.largestWeight) from  t_eventWorkCycle o where o.visible=?1 and o.socketImei.id=?2 and o.startTime<?3 and o.startTime>=?4")
+				.createQuery(
+						"select count(o.id) from EventWorkCycle o where o.visible=?1 and o.socketImei.id=?2 and o.startTime<?3 and o.startTime>=?4")
 				.setParameter(1, true).setParameter(2, sid)
 				.setParameter(3, endDate).setParameter(4, beginDate);
-
-		if (query.getSingleResult() == null) {
-			return 0;
-		}
-
 		return Integer.parseInt(query.getSingleResult() + "");
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public int countTime(Date beginDate, Date endDate, long sid) {
+	public int countTime(long sid, Date beginDate, Date endDate) {
 		Query query = em
 				.createQuery(
 						"select o from EventWorkCycle o "

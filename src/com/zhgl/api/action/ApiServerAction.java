@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -104,7 +105,7 @@ public class ApiServerAction {
 				Date endDate = HelperUtil.addDays(now, 1);
 				Date startDate = HelperUtil.reduceDays(endDate, 1);
 				double countWeight = eventWorkCycleService.countWeight(
-						startDate, endDate, si.getId());
+						si.getId(), startDate, endDate);
 				map.put("totalWeight", countWeight + "");
 				// 今日报警
 				long countAlarm = eventAlarmService.countToday(si.getId());
@@ -619,6 +620,245 @@ public class ApiServerAction {
 		mav.addObject("centerPoint",
 				request.getServletContext().getAttribute("centerPoint")
 						.toString());
+		return mav;
+	}
+
+	/**
+	 * 统计工作循环吊重
+	 * 
+	 * @param sid
+	 * @return
+	 */
+	@RequestMapping("/count/weight/{sid}")
+	public ModelAndView countWeight(@PathVariable long sid) {
+		// 7个选项卡的吊重 数量 时间数据集合
+		List<Double> weight1 = new ArrayList<Double>();
+		List<Integer> count1 = new ArrayList<Integer>();
+		List<Integer> time1 = new ArrayList<Integer>();
+		List<Double> weight2 = new ArrayList<Double>();
+		List<Integer> count2 = new ArrayList<Integer>();
+		List<Integer> time2 = new ArrayList<Integer>();
+		List<Double> weight3 = new ArrayList<Double>();
+		List<Integer> count3 = new ArrayList<Integer>();
+		List<Integer> time3 = new ArrayList<Integer>();
+		List<Double> weight4 = new ArrayList<Double>();
+		List<Integer> count4 = new ArrayList<Integer>();
+		List<Integer> time4 = new ArrayList<Integer>();
+		List<Double> weight5 = new ArrayList<Double>();
+		List<Integer> count5 = new ArrayList<Integer>();
+		List<Integer> time5 = new ArrayList<Integer>();
+		List<Double> weight6 = new ArrayList<Double>();
+		List<Integer> count6 = new ArrayList<Integer>();
+		List<Integer> time6 = new ArrayList<Integer>();
+		List<Double> weight7 = new ArrayList<Double>();
+		List<Integer> count7 = new ArrayList<Integer>();
+		List<Integer> time7 = new ArrayList<Integer>();
+
+		List<Date> dates3 = new ArrayList<Date>();
+		List<Date> dates4 = new ArrayList<Date>();
+		List<Date> dates5 = new ArrayList<Date>();
+		List<Date> dates6 = new ArrayList<Date>();
+		List<Date> dates7 = new ArrayList<Date>();
+
+		/** 处理今天 **/
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		int month = cal.get(Calendar.MONTH);
+		int day = cal.get(Calendar.DATE);
+		Date beginDate;
+		Date endDate;
+		for (int i = 0; i < 24; i++) {
+			/**
+			 * 今天的数据
+			 */
+			cal.set(year, month, day, i, 0, 0);
+			beginDate = cal.getTime();
+			if (i == 23) {
+				cal.set(year, month, day + 1, 0, 0, 0);
+				endDate = cal.getTime();
+			} else {
+				cal.set(year, month, day, i + 1, 0, 0);
+				endDate = cal.getTime();
+			}
+			double weight01 = eventWorkCycleService.countWeight(sid, beginDate,
+					endDate);
+			int count01 = eventWorkCycleService.countNumber(sid, beginDate,
+					endDate);
+			int time01 = eventWorkCycleService.countTime(sid, beginDate,
+					endDate);
+			weight1.add(weight01);
+			count1.add(count01);
+			time1.add(time01);
+			/**
+			 * 昨天的数据
+			 */
+			cal.set(year, month, day - 1, i, 0, 0);
+			beginDate = cal.getTime();
+			if (i == 23) {
+				cal.set(year, month, day, 0, 0, 0);
+				endDate = cal.getTime();
+			} else {
+				cal.set(year, month, day - 1, i + 1, 0, 0);
+				endDate = cal.getTime();
+			}
+			double weight02 = eventWorkCycleService.countWeight(sid, beginDate,
+					endDate);
+			int count02 = eventWorkCycleService.countNumber(sid, beginDate,
+					endDate);
+			int time02 = eventWorkCycleService.countTime(sid, beginDate,
+					endDate);
+			weight2.add(weight02);
+			count2.add(count02);
+			time2.add(time02);
+		}
+		/**
+		 * 最近7天
+		 */
+		for (int i = 0; i < 7; i++) {
+			cal.set(year, month, day - i + 1, 0, 0, 0);
+			endDate = cal.getTime();
+			cal.set(year, month, day - i, 0, 0, 0);
+			beginDate = cal.getTime();
+			double weight03 = eventWorkCycleService.countWeight(sid, beginDate,
+					endDate);
+			int count03 = eventWorkCycleService.countNumber(sid, beginDate,
+					endDate);
+			int time03 = eventWorkCycleService.countTime(sid, beginDate,
+					endDate);
+			weight3.add(weight03);
+			count3.add(count03);
+			time3.add(time03);
+			dates3.add(beginDate);
+		}
+		/**
+		 * 最近一月
+		 */
+		Date date4Begin;
+		Date date4End;
+		for (int i = 0; i < 4 * 7; i += 7) {
+			cal.set(year, month, day - i + 1, 0, 0, 0);
+			endDate = cal.getTime();
+			cal.set(year, month, day - i - 7 + 1, 0, 0, 0);
+			beginDate = cal.getTime();
+			cal.set(year, month, day - i - 7 + 1, 0, 0, 0);
+			date4Begin = cal.getTime();
+			cal.set(year, month, day - i, 0, 0, 0);
+			date4End = cal.getTime();
+			double weight04 = eventWorkCycleService.countWeight(sid, beginDate,
+					endDate);
+			int count04 = eventWorkCycleService.countNumber(sid, beginDate,
+					endDate);
+			int time04 = eventWorkCycleService.countTime(sid, beginDate,
+					endDate);
+			weight4.add(weight04);
+			count4.add(count04);
+			time4.add(time04);
+			dates4.add(date4Begin);
+			dates4.add(date4End);
+		}
+		/**
+		 * 最近一年
+		 */
+		for (int i = 0; i < 12; i++) {
+			cal.set(year, month - i + 1, 1, 0, 0, 0);
+			endDate = cal.getTime();
+			cal.set(year, month - i, 1, 0, 0, 0);
+			beginDate = cal.getTime();
+			double weight05 = eventWorkCycleService.countWeight(sid, beginDate,
+					endDate);
+			int count05 = eventWorkCycleService.countNumber(sid, beginDate,
+					endDate);
+			int time05 = eventWorkCycleService.countTime(sid, beginDate,
+					endDate);
+			weight5.add(weight05);
+			count5.add(count05);
+			time5.add(time05);
+			dates5.add(beginDate);
+		}
+		/**
+		 * 最近八年
+		 */
+		for (int i = 0; i < 8; i++) {
+			cal.set(year - i + 1, 1, 1, 0, 0, 0);
+			endDate = cal.getTime();
+			cal.set(year - i, 1, 1, 0, 0, 0);
+			beginDate = cal.getTime();
+			double weight06 = eventWorkCycleService.countWeight(sid, beginDate,
+					endDate);
+			int count06 = eventWorkCycleService.countNumber(sid, beginDate,
+					endDate);
+			int time06 = eventWorkCycleService.countTime(sid, beginDate,
+					endDate);
+			weight6.add(weight06);
+			count6.add(count06);
+			time6.add(time06);
+			dates6.add(beginDate);
+		}
+		/**
+		 * 最近十五年
+		 */
+		for (int i = 0; i < 15; i++) {
+			cal.set(year - i + 1, 1, 1, 0, 0, 0);
+			endDate = cal.getTime();
+			cal.set(year - i, 1, 1, 0, 0, 0);
+			beginDate = cal.getTime();
+			double weight07 = eventWorkCycleService.countWeight(sid, beginDate,
+					endDate);
+			int count07 = eventWorkCycleService.countNumber(sid, beginDate,
+					endDate);
+			int time07 = eventWorkCycleService.countTime(sid, beginDate,
+					endDate);
+			weight7.add(weight07);
+			count7.add(count07);
+			time7.add(time07);
+			dates7.add(beginDate);
+		}
+		ModelAndView mav = new ModelAndView("data/api/count_weight");
+		mav.addObject("weight1", weight1);
+		mav.addObject("count1", count1);
+		mav.addObject("time1", time1);
+
+		mav.addObject("weight2", weight2);
+		mav.addObject("count2", count2);
+		mav.addObject("time2", time2);
+
+		mav.addObject("weight3", weight3);
+		mav.addObject("count3", count3);
+		mav.addObject("time3", time3);
+
+		mav.addObject("weight4", weight4);
+		mav.addObject("count4", count4);
+		mav.addObject("time4", time4);
+
+		mav.addObject("weight5", weight5);
+		mav.addObject("count15", count5);
+		mav.addObject("time5", time5);
+
+		mav.addObject("weight6", weight6);
+		mav.addObject("count6", count6);
+		mav.addObject("time6", time6);
+
+		mav.addObject("weight7", weight7);
+		mav.addObject("count7", count7);
+		mav.addObject("time7", time7);
+		
+		mav.addObject("dates3", dates3);
+		mav.addObject("dates4", dates4);
+		mav.addObject("dates5", dates5);
+		mav.addObject("dates6", dates6);
+		mav.addObject("dates7", dates7);
+		return mav;
+	}
+
+	@RequestMapping("/count/alarm/{sid}")
+	public ModelAndView countAlarm(@PathVariable long sid) {
+		ModelAndView mav = new ModelAndView("data/api/overlook");
+		return mav;
+	}
+
+	@RequestMapping("/count/vio/{sid}")
+	public ModelAndView countVio(@PathVariable long sid) {
+		ModelAndView mav = new ModelAndView("data/api/overlook");
 		return mav;
 	}
 

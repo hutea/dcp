@@ -62,6 +62,10 @@ public class SocketImei {
 	@Transient
 	private Double totalWeight;// 累计吊重
 	@Transient
+	private int totalWeightTime;// 累计时间
+	@Transient
+	private int totalWeightNumber;// 累计次数
+	@Transient
 	private Long totalAlarm;// 报警次数
 	@Transient
 	private Long totalVio;// 违章次数
@@ -82,6 +86,22 @@ public class SocketImei {
 
 	public void setEnable(Boolean enable) {
 		this.enable = enable;
+	}
+
+	public int getTotalWeightTime() {
+		return totalWeightTime;
+	}
+
+	public void setTotalWeightTime(int totalWeightTime) {
+		this.totalWeightTime = totalWeightTime;
+	}
+
+	public int getTotalWeightNumber() {
+		return totalWeightNumber;
+	}
+
+	public void setTotalWeightNumber(int totalWeightNumber) {
+		this.totalWeightNumber = totalWeightNumber;
 	}
 
 	public Date getJoinDate() {

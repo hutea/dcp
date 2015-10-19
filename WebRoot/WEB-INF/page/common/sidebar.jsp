@@ -14,15 +14,15 @@
 				</a>					
 			</li>
 			<li class='has-sub ${(m>10&&m<20)?"active":"" }'><a class="" href="${pageContext.request.contextPath}/manage/run/point/list"><i class="fa fa-desktop fa-fw"></i> <span class="menu-text">运行监控</span></a></li>
-			<li class="has-sub">
+			<li class="has-sub ${(m>20&&m<30)?"active":"" }">
 				<a href="javascript:;" class="">
 				<i class="fa fa-table fa-fw"></i> <span class="menu-text">分析统计</span>
 				<span class="arrow"></span>
 				</a>
 				<ul class="sub">
-					<li><a class="" href="simple_table.html"><span class="sub-menu-text">工作循环</span></a></li>
-					<li><a class="" href="dynamic_tables.html"><span class="sub-menu-text">报警信息</span></a></li>
-					<li><a class="" href="jqgrid_plugin.html"><span class="sub-menu-text">违章信息</span></a></li>
+					<li class='${m==21?"current":"" }'><a class="" href="${pageContext.request.contextPath}/manage/workCycle/list"><span class="sub-menu-text">工作循环</span></a></li>
+					<li class='${m==22?"current":"" }'><a class="" href="${pageContext.request.contextPath}/manage/alarm/list"><span class="sub-menu-text">报警信息</span></a></li>
+					<li class='${m==23?"current":"" }'><a class="" href="${pageContext.request.contextPath}/manage/violation/list"><span class="sub-menu-text">违章信息</span></a></li>
 				</ul>
 			</li>
 			<li class="has-sub">
